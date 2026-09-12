@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Syed Musa, WordPress Developer</title>
+<meta name="description" content="Syed Musa, WordPress Developer specializing in Elementor, WooCommerce, and performance optimization. Building fast, modern and high-converting websites.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#06090F;
+    --bg-2:#0A0E17;
+    --panel:#0C111C;
+    --card:rgba(255,255,255,0.03);
+    --card-b:rgba(255,255,255,0.08);
+    --card-b-hover:rgba(95,160,255,0.4);
+    --blue:#2E7DFF;
+    --blue-2:#5FA0FF;
+    --blue-deep:#12296B;
+    --cyan:#38C7FF;
+    --text:#EEF2FA;
+    --text-dim:#94A0BA;
+    --text-mute:#57617A;
+    --maxw:1180px;
+    --r:12px;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:'Inter', sans-serif;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,h4{ font-family:'Sora', sans-serif; font-weight:600; letter-spacing:-0.01em; }
+  a{ color:inherit; text-decoration:none; }
+  img{ max-width:100%; display:block; }
+  ::selection{ background:var(--blue); color:#fff; }
+  .wrap{ max-width:var(--maxw); margin:0 auto; padding:0 28px; }
+  .card{ background:var(--card); border:1px solid var(--card-b); border-radius:var(--r); position:relative; }
+
+  /* ---------- ambient section glow ---------- */
+  section{ padding:64px 0; border-bottom:1px solid var(--card-b); position:relative; overflow:hidden; }
+  section:last-of-type{ border-bottom:none; }
+  .glow{ position:absolute; border-radius:50%; filter:blur(90px); pointer-events:none; z-index:0; animation:glowPulse 9s ease-in-out infinite; }
+  .glow-blue{ background:radial-gradient(circle, rgba(46,125,255,0.35), transparent 70%); }
+  .glow-cyan{ background:radial-gradient(circle, rgba(56,199,255,0.28), transparent 70%); }
+  .glow-deep{ background:radial-gradient(circle, rgba(18,41,107,0.5), transparent 70%); }
+  @keyframes glowPulse{ 0%,100%{ opacity:0.55; transform:scale(1); } 50%{ opacity:1; transform:scale(1.12); } }
+  section > .wrap{ position:relative; z-index:1; }
+
+  /* ---------- scroll reveal ---------- */
+  .card, .sec-head, .stat-strip .stat, .mini-stat, .tool-pill{
+    opacity:0; transform:translateY(26px); transition:opacity .7s cubic-bezier(.2,.7,.3,1), transform .7s cubic-bezier(.2,.7,.3,1);
+  }
+  .card.visible, .sec-head.visible, .stat-strip .stat.visible, .mini-stat.visible, .tool-pill.visible{
+    opacity:1; transform:translateY(0);
+  }
+
+  /* ---------- nav ---------- */
+  .top-bar{ background:transparent; border-bottom:1px solid transparent; position:relative; z-index:61; }
+  .top-bar .wrap{ display:flex; align-items:center; justify-content:space-between; height:36px; font-size:11.5px; color:var(--text-mute); }
+  .top-bar .avail{ display:flex; align-items:center; gap:7px; }
+  .top-bar .avail .pulse-dot{ width:6px; height:6px; border-radius:50%; background:var(--cyan); box-shadow:0 0 8px var(--cyan); animation:pulse 2s infinite ease-in-out; }
+  @keyframes pulse{ 0%,100%{opacity:1;} 50%{opacity:0.3;} }
+  .top-bar .quick-links{ display:flex; align-items:center; gap:18px; }
+  .top-bar .quick-links a{ color:var(--text-mute); transition:color .2s ease; }
+  .top-bar .quick-links a:hover{ color:var(--blue-2); }
+
+  header{ position:sticky; top:0; z-index:60; background:transparent; border-bottom:1px solid transparent; transition:all .35s ease; padding:12px 0; }
+  header::after{ content:''; position:absolute; left:0; right:0; bottom:-1px; height:1px;
+    background:linear-gradient(90deg, transparent, var(--blue-2), var(--cyan), var(--blue-2), transparent);
+    background-size:200% 100%; animation:sweep 6s linear infinite; opacity:.55; }
+  @keyframes sweep{ 0%{ background-position:0% 0; } 100%{ background-position:200% 0; } }
+  .scroll-progress{ position:fixed; top:0; left:0; height:2.5px; width:0%; z-index:100;
+    background:linear-gradient(90deg, var(--blue), var(--cyan)); box-shadow:0 0 10px rgba(56,199,255,0.7); transition:width .1s linear; }
+  .page-top-glow{
+    position:fixed; top:-220px; left:50%; transform:translateX(-50%); width:900px; height:420px;
+    background:radial-gradient(ellipse at center, rgba(46,125,255,0.28), rgba(56,199,255,0.12) 45%, transparent 72%);
+    filter:blur(60px); z-index:0; pointer-events:none;
+  }
+  .top-bar{ max-height:36px; overflow:hidden; transition:max-height .35s ease, opacity .3s ease; }
+  .top-bar.hide{ max-height:0; opacity:0; }
+  header.scrolled{ background:transparent; border-bottom-color:transparent; padding:10px 0; }
+  header.scrolled::after{ opacity:0; }
+  .nav-inner{
+    display:flex; align-items:center; justify-content:space-between; height:70px;
+    max-width:1000px; margin:0 auto; padding:0 12px 0 22px; border-radius:100px; transition:all .35s ease;
+    background:rgba(13,18,30,0.45); border:1px solid var(--card-b); backdrop-filter:blur(36px) saturate(180%); -webkit-backdrop-filter:blur(36px) saturate(180%);
+    box-shadow:0 10px 28px rgba(0,0,0,0.22);
+  }
+  header.scrolled .nav-inner{ height:54px; max-width:860px; background:rgba(11,16,27,0.72); border-color:rgba(95,160,255,0.22); box-shadow:0 16px 38px rgba(0,0,0,0.45), 0 0 0 1px rgba(95,160,255,0.1); backdrop-filter:blur(40px) saturate(180%); -webkit-backdrop-filter:blur(40px) saturate(180%); padding:0 8px 0 18px; }
+  .logo{ display:flex; align-items:center; gap:10px; font-family:'Sora',sans-serif; font-weight:700; font-size:15px; letter-spacing:0.02em; }
+  .logo .logo-ring{
+    width:38px; height:38px; border-radius:50%; padding:2px;
+    background:conic-gradient(from 180deg, var(--blue), var(--cyan), var(--blue-deep), var(--blue));
+    animation:spin 6s linear infinite; transition:width .3s ease, height .3s ease;
+  }
+  header.scrolled .logo .logo-ring{ width:32px; height:32px; }
+  .logo .logo-ring img{ width:100%; height:100%; border-radius:50%; object-fit:cover; border:2px solid var(--bg); }
+  @keyframes spin{ to{ transform:rotate(360deg); } }
+  nav ul{ list-style:none; display:flex; gap:4px; }
+  nav a{ font-size:13.5px; color:var(--text-dim); transition:all .25s ease; padding:8px 16px; border-radius:100px; display:inline-block; }
+  nav a:hover{ color:var(--text); background:rgba(255,255,255,0.06); }
+  nav a.active{ color:#fff; font-weight:600; background:linear-gradient(135deg,var(--blue),var(--blue-2)); box-shadow:0 4px 16px rgba(46,125,255,0.5); }
+  .btn{ display:inline-flex; align-items:center; gap:7px; padding:10px 22px; font-size:13.5px; font-weight:500; border-radius:100px; transition:all .25s ease; cursor:pointer; border:1px solid transparent; white-space:nowrap; position:relative; overflow:hidden; }
+  .btn-solid{ background:var(--blue); color:#fff; }
+  .btn-solid:hover{ background:var(--blue-2); box-shadow:0 0 0 4px rgba(95,160,255,0.18), 0 8px 24px rgba(46,125,255,0.4); transform:translateY(-1px); }
+  .btn-outline{ border-color:var(--card-b); color:var(--text); }
+  .btn-outline:hover{ border-color:var(--card-b-hover); box-shadow:0 0 20px rgba(95,160,255,0.15); }
+  .menu-btn{ display:none; background:none; border:0; color:var(--text); font-size:22px; cursor:pointer; }
+
+  @media (max-width: 980px){
+    nav{ display:none; position:absolute; top:100%; left:0; right:0; background:rgba(6,9,15,0.97); border-bottom:1px solid var(--card-b); backdrop-filter:blur(20px); }
+    nav.open{ display:block; }
+    nav ul{ flex-direction:column; gap:0; padding:6px 28px 18px; }
+    nav li{ border-top:1px solid var(--card-b); }
+    nav a{ display:block; padding:14px 0; }
+  }
+
+  .eyebrow{ display:inline-flex; align-items:center; gap:8px; font-size:11.5px; letter-spacing:0.06em; text-transform:uppercase; color:var(--blue-2); margin-bottom:14px; }
+  .eyebrow .bar{ width:18px; height:1px; background:var(--blue-2); }
+  .sec-title{ font-size:26px; color:var(--text); margin-bottom:8px; }
+  .sec-sub{ font-size:14px; color:var(--text-dim); max-width:520px; }
+  .sec-head{ margin-bottom:34px; }
+  .sec-head.center{ text-align:center; margin-left:auto; margin-right:auto; }
+  .sec-head.center .sec-sub{ margin-left:auto; margin-right:auto; }
+
+  /* ---------- hero ---------- */
+  .hero{ padding-top:56px; }
+  .hero-grid{ display:grid; grid-template-columns:1.05fr 0.95fr; gap:50px; align-items:center; }
+  .hero h1{ font-size:42px; line-height:1.2; color:var(--text); }
+  .hero h1 .accent{ color:var(--blue-2); }
+  .hero-copy{ margin-top:18px; max-width:490px; }
+  .hero p.lead{ margin-top:18px; max-width:480px; font-size:15px; color:var(--text-dim); line-height:1.75; }
+  .hero-copy p{ font-size:14.5px; color:var(--text-dim); line-height:1.75; margin-bottom:12px; }
+  .hero-copy p:last-child{ color:var(--text); font-weight:500; margin-bottom:0; }
+  .hero-ctas{ display:flex; gap:12px; margin-top:28px; flex-wrap:wrap; }
+
+  /* ---------- hero photo visual ---------- */
+  .hero-visual{ position:relative; min-height:460px; display:flex; align-items:center; justify-content:center; }
+  .hero-photo-frame{
+    position:relative; width:300px; aspect-ratio:4/5; border-radius:26px; overflow:hidden; z-index:2;
+    border:1px solid rgba(95,160,255,0.25);
+    box-shadow:0 30px 70px rgba(0,0,0,0.5), 0 0 0 1px rgba(95,160,255,0.06), 0 0 80px rgba(46,125,255,0.25);
+  }
+  .hero-photo-frame img{ width:100%; height:100%; object-fit:cover; object-position:top center; }
+  .hero-badge{
+    position:absolute; z-index:3; display:flex; align-items:center; gap:8px; padding:10px 16px;
+    border-radius:100px; background:rgba(11,16,27,0.85); border:1px solid var(--card-b); backdrop-filter:blur(14px);
+    font-size:12px; font-weight:500; color:var(--text); box-shadow:0 10px 28px rgba(0,0,0,0.4);
+    animation:floaty 4s ease-in-out infinite; white-space:nowrap;
+  }
+  .hero-badge .dot{ width:7px; height:7px; border-radius:50%; background:var(--blue-2); box-shadow:0 0 8px var(--blue-2); flex-shrink:0; }
+  .badge-tl{ top:6%; left:-4%; animation-delay:0s; }
+  .badge-tr{ top:16%; right:-6%; animation-delay:0.9s; }
+  .badge-mr{ top:46%; right:-8%; animation-delay:1.3s; }
+  .badge-br{ bottom:14%; right:-4%; animation-delay:0.5s; }
+  .hero-stat-card{
+    position:absolute; bottom:7%; left:-4%; z-index:3; background:rgba(11,16,27,0.9); border:1px solid var(--card-b);
+    border-radius:14px; padding:14px 20px; backdrop-filter:blur(14px); box-shadow:0 16px 34px rgba(0,0,0,0.45);
+    animation:floaty 4.6s ease-in-out infinite; animation-delay:0.7s;
+  }
+  .hero-stat-card .num{ font-family:'Sora',sans-serif; font-size:22px; font-weight:700; color:var(--blue-2); }
+  .hero-stat-card .lbl{ font-size:10px; color:var(--text-mute); margin-top:2px; text-transform:uppercase; letter-spacing:0.03em; }
+
+  @keyframes floaty{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-8px); } }
+
+  /* ---------- stat strip ---------- */
+  .stat-strip{ display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:var(--card-b); border:1px solid var(--card-b); border-radius:var(--r); overflow:hidden; margin-top:44px; }
+  .stat-strip .stat{ background:var(--panel); padding:20px 18px; text-align:center; }
+  .stat-strip .num{ font-family:'Sora',sans-serif; font-size:22px; font-weight:700; color:var(--blue-2); }
+  .stat-strip .label{ font-size:11.5px; color:var(--text-mute); margin-top:4px; }
+
+  /* ---------- about welcome card ---------- */
+  .welcome-card{ display:grid; grid-template-columns:1fr 0.62fr; gap:36px; align-items:center; padding:32px; }
+  .welcome-card h3{ font-size:20px; color:var(--text); margin-bottom:12px; }
+  .welcome-card p{ font-size:14px; color:var(--text-dim); line-height:1.75; margin-bottom:10px; }
+  .welcome-photo{ border-radius:10px; overflow:hidden; aspect-ratio:3/4; border:1px solid var(--card-b); }
+  .welcome-photo img{ width:100%; height:100%; object-fit:cover; object-position:center 15%; }
+  .mini-stat-row{ display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-top:26px; }
+  .mini-stat{ text-align:center; padding:14px 8px; border:1px solid var(--card-b); border-radius:9px; }
+  .mini-stat .n{ font-family:'Sora',sans-serif; font-size:17px; color:var(--blue-2); font-weight:700; }
+  .mini-stat .l{ font-size:10.5px; color:var(--text-mute); margin-top:3px; }
+
+  /* ---------- skills / expertise grid ---------- */
+  .expertise-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:14px; }
+  .expertise-card{ padding:20px; transition:border-color .2s ease; }
+  .expertise-card:hover{ border-color:var(--card-b-hover); }
+  .expertise-card .n{ font-family:'Sora',sans-serif; font-size:11.5px; color:var(--blue-2); margin-bottom:10px; display:block; }
+  .expertise-card h4{ font-size:14.5px; color:var(--text); margin-bottom:10px; }
+  .expertise-card ul{ list-style:none; }
+  .expertise-card li{ font-size:12.5px; color:var(--text-dim); padding:2px 0; }
+
+  /* ---------- services grid (dense, ARC style) ---------- */
+  .services-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:14px; }
+  .service-card{ padding:20px; transition:border-color .2s ease, transform .2s ease; }
+  .service-card:hover{ border-color:var(--card-b-hover); transform:translateY(-2px); }
+  .service-card h4{ font-size:14px; color:var(--text); margin-bottom:8px; }
+  .service-card p{ font-size:12px; color:var(--text-dim); line-height:1.55; }
+
+  /* ---------- tools strip ---------- */
+  .tools-strip{ display:flex; flex-wrap:wrap; gap:10px; justify-content:center; }
+  .tool-pill{ padding:9px 18px; border:1px solid var(--card-b); border-radius:30px; font-size:12.5px; color:var(--text-dim); transition:all .2s ease; }
+  .tool-pill:hover{ border-color:var(--card-b-hover); color:var(--text); }
+
+  /* ---------- tools marquee ---------- */
+  .marquee-viewport{ overflow:hidden; position:relative; width:100%;
+    -webkit-mask-image:linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+    mask-image:linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); }
+  .marquee-row{ display:flex; gap:14px; width:max-content; padding:6px 0; }
+  .marquee-row.left{ animation:marqueeLeft 32s linear infinite; }
+  .marquee-row.right{ animation:marqueeRight 36s linear infinite; }
+  .marquee-row:hover{ animation-play-state:paused; }
+  @keyframes marqueeLeft{ from{ transform:translateX(0); } to{ transform:translateX(-50%); } }
+  @keyframes marqueeRight{ from{ transform:translateX(-50%); } to{ transform:translateX(0); } }
+  .tool-card{
+    flex:0 0 auto; width:150px; padding:20px 14px; text-align:center; border-radius:12px;
+    background:var(--card); border:1px solid var(--card-b); transition:all .25s ease;
+  }
+  .tool-card:hover{ border-color:var(--card-b-hover); transform:translateY(-3px); box-shadow:0 10px 26px rgba(46,125,255,0.16); }
+  .tool-card .badge{
+    width:40px; height:40px; margin:0 auto 12px; border-radius:10px; display:flex; align-items:center; justify-content:center;
+    font-family:'Sora',sans-serif; font-weight:700; font-size:13px; color:#fff; overflow:hidden;
+  }
+  .tool-card .badge img{ width:20px; height:20px; object-fit:contain; }
+  .tool-card .name{ font-size:12px; color:var(--text-dim); }
+
+  /* ---------- projects grid: 5 per row, premium hover ---------- */
+  .proj-grid{ display:grid; grid-template-columns:repeat(5,1fr); gap:14px; }
+  .proj-card{ overflow:hidden; transition:transform .3s ease, border-color .3s ease, box-shadow .3s ease; }
+  .proj-card:hover{ transform:translateY(-5px); border-color:var(--card-b-hover); box-shadow:0 16px 40px rgba(46,125,255,0.18), 0 0 0 1px rgba(95,160,255,0.15); }
+  .proj-thumb{ position:relative; display:block; aspect-ratio:8/5; overflow:hidden; border-bottom:1px solid var(--card-b); }
+  .proj-thumb img{ width:100%; height:100%; object-fit:cover; object-position:top; transition:transform .5s cubic-bezier(.2,.7,.3,1), filter .4s ease; }
+  .proj-card:hover .proj-thumb img{ transform:scale(1.1); filter:brightness(0.55); }
+  .proj-index{
+    position:absolute; top:9px; right:9px; font-family:'Sora',sans-serif; font-size:10px; color:var(--text-dim);
+    background:rgba(6,9,15,0.7); border:1px solid var(--card-b); padding:2px 7px; border-radius:20px; z-index:2;
+  }
+  .proj-overlay{
+    position:absolute; inset:0; display:flex; align-items:center; justify-content:center; gap:6px;
+    font-size:12px; font-weight:500; color:#fff; opacity:0; transform:translateY(8px);
+    transition:opacity .3s ease, transform .3s ease; z-index:2;
+  }
+  .proj-overlay span{ display:inline-block; transition:transform .3s ease; }
+  .proj-card:hover .proj-overlay{ opacity:1; transform:translateY(0); }
+  .proj-card:hover .proj-overlay span{ transform:translateX(3px); }
+  .proj-info{ padding:13px 14px 15px; }
+  .proj-info .tag{ font-size:10px; color:var(--blue-2); text-transform:uppercase; letter-spacing:0.03em; }
+  .proj-info h4{ font-size:13px; color:var(--text); margin:5px 0 6px; line-height:1.3; }
+  .proj-info p{ font-size:11px; color:var(--text-dim); line-height:1.45; min-height:30px; }
+
+  /* ---------- process ---------- */
+  .process-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:14px; }
+  .proc-card{ padding:22px 18px; }
+  .proc-card .n{ width:32px; height:32px; border-radius:8px; background:linear-gradient(135deg,var(--blue),var(--blue-deep)); display:flex; align-items:center; justify-content:center; font-family:'Sora',sans-serif; font-size:12.5px; font-weight:700; margin-bottom:14px; }
+  .proc-card .stage{ font-size:10.5px; color:var(--blue-2); text-transform:uppercase; letter-spacing:0.04em; }
+  .proc-card h4{ font-size:14.5px; color:var(--text); margin:6px 0 8px; }
+  .proc-card p{ font-size:12px; color:var(--text-dim); line-height:1.55; }
+
+  /* ---------- testimonials ---------- */
+  .testi-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:14px; }
+  .testi-card{ padding:24px; }
+  .testi-card .quote-icon{ font-family:'Sora',sans-serif; font-size:30px; color:var(--blue-2); line-height:1; margin-bottom:10px; opacity:0.8; }
+  .testi-card .stars{ color:var(--blue-2); font-size:13px; letter-spacing:2px; margin-bottom:12px; }
+  .testi-card p{ font-size:13px; color:var(--text-dim); line-height:1.65; }
+  .testi-who{ display:flex; align-items:center; gap:10px; margin-top:18px; padding-top:16px; border-top:1px solid var(--card-b); }
+  .testi-who .dot{ width:32px; height:32px; border-radius:50%; background:linear-gradient(135deg,var(--blue),var(--cyan)); display:flex; align-items:center; justify-content:center; font-size:11px; font-family:'Sora',sans-serif; font-weight:700; color:var(--bg); }
+  .testi-who strong{ display:block; font-size:12.5px; color:var(--text); }
+  .testi-who span{ font-size:11px; color:var(--text-mute); }
+
+  /* ---------- contact ---------- */
+  .contact-grid{ display:grid; grid-template-columns:0.85fr 1.15fr; gap:36px; }
+  .contact-info-card{ padding:26px; }
+  .contact-info-card h4{ font-size:16px; color:var(--text); margin-bottom:10px; }
+  .contact-info-card p{ font-size:13px; color:var(--text-dim); line-height:1.7; margin-bottom:20px; }
+  .contact-line{ display:flex; justify-content:space-between; padding:12px 0; border-top:1px solid var(--card-b); font-size:13px; }
+  .contact-line:last-child{ border-bottom:1px solid var(--card-b); }
+  .contact-line span:first-child{ color:var(--text-mute); }
+  .contact-line a{ color:var(--blue-2); }
+  .form-card{ padding:28px; }
+  .form-row{ display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:14px; }
+  .field label{ font-size:11px; color:var(--text-mute); display:block; margin-bottom:7px; }
+  .field input, .field select, .field textarea{
+    width:100%; background:rgba(255,255,255,0.025); border:1px solid var(--card-b); border-radius:8px;
+    padding:11px 14px; color:var(--text); font-family:'Inter',sans-serif; font-size:13.5px; outline:0; resize:none;
+  }
+  .field select option{ background:var(--panel); color:var(--text); }
+  .field input:focus, .field select:focus, .field textarea:focus{ border-color:var(--card-b-hover); }
+  .field input::placeholder, .field textarea::placeholder{ color:var(--text-mute); }
+  .field{ margin-bottom:14px; }
+  .send-btn{ width:100%; padding:12px; justify-content:center; margin-top:4px; }
+
+  /* ---------- footer ---------- */
+  footer{ padding:48px 0 26px; }
+  .footer-grid{ display:grid; grid-template-columns:1.3fr 0.7fr 1fr; gap:40px; margin-bottom:36px; }
+  .footer-grid .logo{ margin-bottom:12px; display:inline-flex; align-items:center; gap:10px; }
+  .logo-ring.footer-ring{ width:30px; height:30px; animation:none; }
+  .logo-ring.footer-ring img{ border-width:1.5px; }
+  .footer-grid p{ font-size:12.5px; color:var(--text-mute); line-height:1.7; max-width:280px; margin-bottom:18px; }
+  .footer-socials{ display:flex; gap:10px; }
+  .footer-socials a{ width:32px; height:32px; border-radius:50%; border:1px solid var(--card-b); display:flex; align-items:center; justify-content:center; font-size:11px; color:var(--text-dim); }
+  .footer-socials a:hover{ color:var(--text); border-color:var(--card-b-hover); }
+  .footer-col h5{ font-size:12.5px; color:var(--text); margin-bottom:14px; font-family:'Sora',sans-serif; }
+  .footer-col a, .footer-col li{ display:block; font-size:12.5px; color:var(--text-dim); padding:4px 0; list-style:none; }
+  .footer-col a:hover{ color:var(--blue-2); }
+  .footer-bottom{ display:flex; justify-content:space-between; align-items:center; padding-top:22px; border-top:1px solid var(--card-b); font-size:11.5px; color:var(--text-mute); flex-wrap:wrap; gap:10px; }
+
+  @media (max-width: 980px){
+    nav{ display:none; } .menu-btn{ display:block; }
+    .hero-grid{ grid-template-columns:1fr; }
+    .hero-visual{ min-height:360px; }
+    .hero-photo-frame{ width:240px; }
+    .badge-tl{ left:2%; top:4%; }
+    .badge-tr{ right:2%; top:4%; }
+    .badge-mr{ right:0%; }
+    .badge-br{ right:2%; bottom:6%; }
+    .hero-stat-card{ left:2%; }
+    .stat-strip{ grid-template-columns:repeat(2,1fr); }
+    .welcome-card{ grid-template-columns:1fr; }
+    .mini-stat-row{ grid-template-columns:repeat(2,1fr); }
+    .expertise-grid, .services-grid{ grid-template-columns:repeat(2,1fr); }
+    .proj-grid{ grid-template-columns:repeat(3,1fr); }
+    .process-grid{ grid-template-columns:repeat(2,1fr); }
+    .testi-grid{ grid-template-columns:1fr; }
+    .contact-grid{ grid-template-columns:1fr; }
+    .footer-grid{ grid-template-columns:1fr 1fr; }
+  }
+  @media (max-width: 620px){
+    .wrap{ padding:0 18px; }
+    .hero h1{ font-size:30px; }
+    .expertise-grid, .services-grid{ grid-template-columns:1fr; }
+    .proj-grid{ grid-template-columns:repeat(2,1fr); }
+    .process-grid{ grid-template-columns:1fr; }
+    .form-row{ grid-template-columns:1fr; }
+    .footer-grid{ grid-template-columns:1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="page-top-glow"></div>
+<div class="scroll-progress" id="scrollProgress"></div>
+
+<div class="top-bar" id="topBar">
+  <div class="wrap">
+    <div class="avail"><span class="pulse-dot"></span>Available for Freelance Projects</div>
+    <div class="quick-links">
+      <a href="mailto:devmusabd0@gmail.com">devmusabd0@gmail.com</a>
+      <a href="https://wa.me/8801819714004" target="_blank" rel="noopener">+880 1819 714004</a>
+      <a href="https://www.linkedin.com/in/developermusa" target="_blank" rel="noopener">LinkedIn</a>
+    </div>
+  </div>
+</div>
+<header id="siteHeader">
+  <div class="wrap nav-inner">
+    <a href="#home" class="logo">
+      <span class="logo-ring"><img src="assets/logo.png" alt="Syed Musa logo"></span>
+      SYED MUSA
+    </a>
+    <nav id="mainNav">
+      <ul>
+        <li><a href="#home">Home</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#skills">Skills</a></li>
+        <li><a href="#services">Services</a></li>
+        <li><a href="#projects">Projects</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </nav>
+    <a href="#contact" class="btn btn-solid">Let's Talk ↗</a>
+    <button class="menu-btn" id="menuBtn">&#9776;</button>
+  </div>
+</header>
+
+<section class="hero" id="home">
+  <div class="glow glow-blue" style="width:460px;height:460px;top:-160px;left:-140px;"></div>
+  <div class="glow glow-cyan" style="width:380px;height:380px;top:60px;right:-140px;"></div>
+  <div class="wrap">
+    <div class="hero-grid">
+      <div>
+        <div class="eyebrow"><span class="bar"></span>Available for Freelance Projects</div>
+        <h1>Building Fast, Modern &amp; <span class="accent">High-Converting</span> Websites.</h1>
+        <p class="lead">Hi, I'm Syed Musa, a WordPress Developer specializing in Elementor, WooCommerce, and Figma to WordPress. I build fast, modern websites that help businesses turn visitors into customers.</p>
+        <div class="hero-ctas">
+          <a href="#contact" class="btn btn-solid">Get a Free Website Audit ↗</a>
+          <a href="#projects" class="btn btn-outline">View My Work →</a>
+        </div>
+        <div class="stat-strip">
+          <div class="stat"><div class="num">2+</div><div class="label">Years Experience</div></div>
+          <div class="stat"><div class="num">80+</div><div class="label">Projects Completed</div></div>
+          <div class="stat"><div class="num">13+</div><div class="label">Live Case Studies</div></div>
+          <div class="stat"><div class="num">99.9%</div><div class="label">Client Focused</div></div>
+        </div>
+      </div>
+            <div class="hero-visual">
+        <div class="glow glow-blue" style="width:360px;height:360px;top:20%;left:10%;"></div>
+        <div class="hero-photo-frame">
+          <img src="assets/photo.jpg" alt="Syed Musa">
+        </div>
+        <div class="hero-badge badge-tl"><span class="dot"></span>WordPress Developer</div>
+        <div class="hero-badge badge-tr"><span class="dot"></span>Figma to WordPress</div>
+        <div class="hero-badge badge-mr"><span class="dot"></span>Elementor Expert</div>
+        <div class="hero-badge badge-br"><span class="dot"></span>WooCommerce Developer</div>
+        <div class="hero-stat-card">
+          <div class="num">80+</div>
+          <div class="lbl">Projects Completed</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="about">
+  <div class="glow glow-deep" style="width:420px;height:420px;top:-120px;right:-160px;"></div>
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow"><span class="bar"></span>About</div>
+      <h2 class="sec-title">I Build Websites That Solve Business Problems.</h2>
+    </div>
+    <div class="card welcome-card">
+      <div>
+        <h3>Why I Do This</h3>
+        <p>Hi, I'm Syed Musa, a WordPress Developer specializing in Elementor, WooCommerce, and Figma to WordPress.</p>
+        <p>I help businesses turn outdated, slow, or hard-to-use websites into modern, responsive, and high-performing websites that build trust and make it easier for visitors to become customers.</p>
+        <p>Whether you need a new website, a redesign, or improvements to your existing site, I focus on clean design, fast performance, mobile responsiveness, and a smooth user experience based on what your business actually needs.</p>
+        <p style="color:var(--text); font-weight:500;">Have a website that needs improvement? Let's find out what's holding it back.</p>
+        <div class="mini-stat-row">
+          <div class="mini-stat"><div class="n">4</div><div class="l">Skill Areas</div></div>
+          <div class="mini-stat"><div class="n">8</div><div class="l">Services Offered</div></div>
+          <div class="mini-stat"><div class="n">12+</div><div class="l">Tools Used</div></div>
+          <div class="mini-stat"><div class="n">13+</div><div class="l">Live Projects</div></div>
+        </div>
+      </div>
+      <div class="welcome-photo"><img src="assets/photo.jpg" alt="Syed Musa"></div>
+    </div>
+  </div>
+</section>
+
+<section id="skills">
+  <div class="glow glow-blue" style="width:380px;height:380px;top:40px;left:-160px;"></div>
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow"><span class="bar"></span>Skills &amp; Expertise</div>
+      <h2 class="sec-title">The skills and tools I use daily.</h2>
+      <p class="sec-sub">To build, optimize and maintain modern websites for businesses.</p>
+    </div>
+    <div class="expertise-grid">
+      <div class="card expertise-card"><span class="n">01</span><h4>WordPress Development</h4><ul><li>WordPress</li><li>Elementor</li><li>WooCommerce</li><li>Theme Customization</li></ul></div>
+      <div class="card expertise-card"><span class="n">02</span><h4>Frontend Development</h4><ul><li>HTML5</li><li>CSS3</li><li>JavaScript</li><li>Responsive Design</li></ul></div>
+      <div class="card expertise-card"><span class="n">03</span><h4>Performance</h4><ul><li>Speed Optimization</li><li>Core Web Vitals</li><li>PageSpeed Optimization</li><li>GTmetrix</li></ul></div>
+      <div class="card expertise-card"><span class="n">04</span><h4>Design &amp; Tools</h4><ul><li>Figma</li><li>Canva Pro</li><li>UI/UX Design</li></ul></div>
+    </div>
+  </div>
+</section>
+
+<section id="services">
+  <div class="glow glow-cyan" style="width:400px;height:400px;bottom:-140px;right:-140px;"></div>
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow"><span class="bar"></span>Services</div>
+      <h2 class="sec-title">Solutions Built Around Your Business Goals.</h2>
+      <p class="sec-sub">From launching a new website to improving an existing one, I create practical WordPress solutions focused on performance, usability and growth.</p>
+    </div>
+    <div class="services-grid">
+      <div class="card service-card"><h4>WordPress Website Development</h4><p>Custom-built sites designed around your business and built to scale with it.</p></div>
+      <div class="card service-card"><h4>Elementor Design &amp; Customization</h4><p>Flexible, editable layouts you can update without touching code.</p></div>
+      <div class="card service-card"><h4>WooCommerce Development</h4><p>Online stores set up to handle products, payments, and checkout without friction.</p></div>
+      <div class="card service-card"><h4>Figma to WordPress Conversion</h4><p>Turning a finished design into a pixel-accurate, fully working site.</p></div>
+      <div class="card service-card"><h4>Website Redesign &amp; Optimization</h4><p>A modern refresh for an existing site, without losing your SEO equity.</p></div>
+      <div class="card service-card"><h4>Website Speed Optimization</h4><p>Finding and fixing what's actually slowing your site down.</p></div>
+      <div class="card service-card"><h4>WordPress Migration &amp; Security</h4><p>Safe migrations and hardening against common attack vectors.</p></div>
+      <div class="card service-card"><h4>Website Maintenance &amp; Support</h4><p>Ongoing updates, backups, and monitoring after launch.</p></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="glow glow-deep" style="width:500px;height:300px;top:-80px;left:50%;transform:translateX(-50%);"></div>
+  <div class="wrap">
+    <div class="sec-head center">
+      <div class="eyebrow" style="justify-content:center;"><span class="bar"></span>Toolkit</div>
+      <h2 class="sec-title">Built With Tools I Know Best.</h2>
+      <p class="sec-sub">The technologies and platforms I use to design, develop, optimize and maintain modern websites.</p>
+    </div>
+    <div class="marquee-viewport">
+      <div class="marquee-row left">
+        <div class="tool-card"><div class="badge" style="background:#21759B;"><img src="https://cdn.simpleicons.org/wordpress/ffffff" alt="WordPress" loading="lazy" onerror="this.replaceWith(document.createTextNode('W'))"></div><div class="name">WordPress</div></div>
+        <div class="tool-card"><div class="badge" style="background:#92003B;"><img src="https://cdn.simpleicons.org/elementor/ffffff" alt="Elementor" loading="lazy" onerror="this.replaceWith(document.createTextNode('e'))"></div><div class="name">Elementor Pro</div></div>
+        <div class="tool-card"><div class="badge" style="background:#7F54B3;"><img src="https://cdn.simpleicons.org/woocommerce/ffffff" alt="WooCommerce" loading="lazy" onerror="this.replaceWith(document.createTextNode('Wc'))"></div><div class="name">WooCommerce</div></div>
+        <div class="tool-card"><div class="badge" style="background:#A259FF;"><img src="https://cdn.simpleicons.org/figma/ffffff" alt="Figma" loading="lazy" onerror="this.replaceWith(document.createTextNode('F'))"></div><div class="name">Figma</div></div>
+        <div class="tool-card"><div class="badge" style="background:#E34F26;"><img src="https://cdn.simpleicons.org/html5/ffffff" alt="HTML5" loading="lazy" onerror="this.replaceWith(document.createTextNode('5'))"></div><div class="name">HTML5</div></div>
+        <div class="tool-card"><div class="badge" style="background:#1572B6;"><img src="https://cdn.simpleicons.org/css3/ffffff" alt="CSS3" loading="lazy" onerror="this.replaceWith(document.createTextNode('3'))"></div><div class="name">CSS3</div></div>
+        <div class="tool-card"><div class="badge" style="background:#21759B;"><img src="https://cdn.simpleicons.org/wordpress/ffffff" alt="WordPress" loading="lazy" onerror="this.replaceWith(document.createTextNode('W'))"></div><div class="name">WordPress</div></div>
+        <div class="tool-card"><div class="badge" style="background:#92003B;"><img src="https://cdn.simpleicons.org/elementor/ffffff" alt="Elementor" loading="lazy" onerror="this.replaceWith(document.createTextNode('e'))"></div><div class="name">Elementor Pro</div></div>
+        <div class="tool-card"><div class="badge" style="background:#7F54B3;"><img src="https://cdn.simpleicons.org/woocommerce/ffffff" alt="WooCommerce" loading="lazy" onerror="this.replaceWith(document.createTextNode('Wc'))"></div><div class="name">WooCommerce</div></div>
+        <div class="tool-card"><div class="badge" style="background:#A259FF;"><img src="https://cdn.simpleicons.org/figma/ffffff" alt="Figma" loading="lazy" onerror="this.replaceWith(document.createTextNode('F'))"></div><div class="name">Figma</div></div>
+        <div class="tool-card"><div class="badge" style="background:#E34F26;"><img src="https://cdn.simpleicons.org/html5/ffffff" alt="HTML5" loading="lazy" onerror="this.replaceWith(document.createTextNode('5'))"></div><div class="name">HTML5</div></div>
+        <div class="tool-card"><div class="badge" style="background:#1572B6;"><img src="https://cdn.simpleicons.org/css3/ffffff" alt="CSS3" loading="lazy" onerror="this.replaceWith(document.createTextNode('3'))"></div><div class="name">CSS3</div></div>
+      </div>
+    </div>
+    <div class="marquee-viewport" style="margin-top:14px;">
+      <div class="marquee-row right">
+        <div class="tool-card"><div class="badge" style="background:#F7DF1E;"><img src="https://cdn.simpleicons.org/javascript/000000" alt="JavaScript" loading="lazy" onerror="this.replaceWith(document.createTextNode('JS'))"></div><div class="name">JavaScript</div></div>
+        <div class="tool-card"><div class="badge" style="background:#777BB4;"><img src="https://cdn.simpleicons.org/php/ffffff" alt="PHP" loading="lazy" onerror="this.replaceWith(document.createTextNode('php'))"></div><div class="name">PHP</div></div>
+        <div class="tool-card"><div class="badge" style="background:#2F6FED;">W</div><div class="name">WoodMart</div></div>
+        <div class="tool-card"><div class="badge" style="background:#FA6423;">RM</div><div class="name">Rank Math</div></div>
+        <div class="tool-card"><div class="badge" style="background:#A61E69;"><img src="https://cdn.simpleicons.org/yoast/ffffff" alt="Yoast SEO" loading="lazy" onerror="this.replaceWith(document.createTextNode('Y'))"></div><div class="name">Yoast SEO</div></div>
+        <div class="tool-card"><div class="badge" style="background:#F6821F;"><img src="https://cdn.simpleicons.org/cloudflare/ffffff" alt="Cloudflare" loading="lazy" onerror="this.replaceWith(document.createTextNode('\u2601'))"></div><div class="name">Cloudflare</div></div>
+        <div class="tool-card"><div class="badge" style="background:#F7DF1E;"><img src="https://cdn.simpleicons.org/javascript/000000" alt="JavaScript" loading="lazy" onerror="this.replaceWith(document.createTextNode('JS'))"></div><div class="name">JavaScript</div></div>
+        <div class="tool-card"><div class="badge" style="background:#777BB4;"><img src="https://cdn.simpleicons.org/php/ffffff" alt="PHP" loading="lazy" onerror="this.replaceWith(document.createTextNode('php'))"></div><div class="name">PHP</div></div>
+        <div class="tool-card"><div class="badge" style="background:#2F6FED;">W</div><div class="name">WoodMart</div></div>
+        <div class="tool-card"><div class="badge" style="background:#FA6423;">RM</div><div class="name">Rank Math</div></div>
+        <div class="tool-card"><div class="badge" style="background:#A61E69;"><img src="https://cdn.simpleicons.org/yoast/ffffff" alt="Yoast SEO" loading="lazy" onerror="this.replaceWith(document.createTextNode('Y'))"></div><div class="name">Yoast SEO</div></div>
+        <div class="tool-card"><div class="badge" style="background:#F6821F;"><img src="https://cdn.simpleicons.org/cloudflare/ffffff" alt="Cloudflare" loading="lazy" onerror="this.replaceWith(document.createTextNode('\u2601'))"></div><div class="name">Cloudflare</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="projects">
+  <div class="glow glow-blue" style="width:460px;height:460px;top:-160px;right:-180px;"></div>
+  <div class="glow glow-cyan" style="width:360px;height:360px;bottom:-140px;left:-160px;"></div>
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow"><span class="bar"></span>Selected Work</div>
+      <h2 class="sec-title">Projects That Turn Ideas Into Websites.</h2>
+      <p class="sec-sub">A selection of live websites I've designed, developed and optimized for businesses, organizations and personal brands.</p>
+    </div>
+    <div class="proj-grid">
+
+      <div class="card proj-card">
+        <a class="proj-thumb" href="https://dataplux.com.au" target="_blank" rel="noopener"><img src="assets/projects/dataplux.jpg" alt="DataPlux"><span class="proj-index">01</span><span class="proj-overlay">Visit Site <span>↗</span></span></a>
+        <div class="proj-info"><span class="tag">Digital Marketing</span><h4>DataPlux</h4><p>Data-driven digital marketing agency in Australia offering SEO, PPC and social media services.</p></div>
+      </div>
+
+      <div class="card proj-card">
+        <a class="proj-thumb" href="https://metabalance-academy.com" target="_blank" rel="noopener"><img src="assets/projects/metabalance-academy.jpg" alt="MetaBalance Academy"><span class="proj-index">02</span><span class="proj-overlay">Visit Site <span>↗</span></span></a>
+        <div class="proj-info"><span class="tag">Health Coaching</span><h4>MetaBalance Academy</h4><p>A blood-sugar coaching program with a science-based method and lead-capture funnel.</p></div>
+      </div>
+
+      <div class="card proj-card">
+        <a class="proj-thumb" href="https://virpa.ai" target="_blank" rel="noopener"><img src="assets/projects/virpa.jpg" alt="Virpa"><span class="proj-index">03</span><span class="proj-overlay">Visit Site <span>↗</span></span></a>
+        <div class="proj-info"><span class="tag">AI SaaS</span><h4>Virpa</h4><p>Landing page for an AI-powered virtual assistant that automates leads and follow-ups.</p></div>
+      </div>
+
+      <div class="card proj-card">
+        <a class="proj-thumb" href="https://lemoratex.com" target="_blank" rel="noopener"><img src="assets/projects/lemora-tex.jpg" alt="Lemora Tex"><span class="proj-index">04</span><span class="proj-overlay">Visit Site <span>↗</span></span></a>
+        <div class="proj-info"><span class="tag">Manufacturing</span><h4>Lemora Tex</h4><p>Fabrics and garment-accessories supplier site for the Bangladesh garments industry.</p></div>
+      </div>
+
+      <div class="card proj-card">
+        <a class="proj-thumb" href="https://outercapeservices.com" target="_blank" rel="noopener"><img src="assets/projects/outer-cape-services.jpg" alt="Outer Cape Services"><span class="proj-index">05</span><span class="proj-overlay">Visit Site <span>↗</span></span></a>
+        <div class="proj-info"><span class="tag">Home Services</span><h4>Outer Cape Services</h4><p>Home repair and maintenance company site built to generate local service leads.</p></div>
+      </div>
+
+      <div class="card proj-card">
+        <a class="proj-thumb" href="https://deuraandeurverkoop.nl" target="_blank" rel="noopener"><img src="assets/projects/deur-aan-deur-verkoop.jpg" alt="Deur aan Deur Verkoop"><span class="proj-index">06</span><span class="proj-overlay">Visit Site <span>↗</span></span></a>
+        <div class="proj-info"><span class="tag">Recruitment</span><h4>Deur aan Deur Verkoop</h4><p>Dutch door-to-door sales recruitment platform connecting sellers with opportunities.</p></div>
+      </div>
+
+      <div class="card proj-card">
+        <a class="proj-thumb" href="https://timelesstastesbd.com" target="_blank" rel="noopener"><img src="assets/projects/timeless-tastes.jpg" alt="Timeless Tastes"><span class="proj-index">07</span><span class="proj-overlay">Visit Site <span>↗</span></span></a>
+        <div class="proj-info"><span class="tag">E-commerce</span><h4>Timeless Tastes</h4><p>Luxury watch e-commerce store featuring original and pre-order timepieces.</p></div>
+      </div>
+
+      <div class="card proj-card">
+        <a class="proj-thumb" href="https://bdsylhet.com" target="_blank" rel="noopener"><img src="assets/projects/bd-sylhet.jpg" alt="BD Sylhet"><span class="proj-index">08</span><span class="proj-overlay">Visit Site <span>↗</span></span></a>
+        <div class="proj-info"><span class="tag">E-commerce</span><h4>BD Sylhet</h4><p>Fashion e-commerce store for men's clothing based in Sylhet, Bangladesh.</p></div>
+      </div>
+
+      <div class="card proj-card">
+        <a class="proj-thumb" href="https://dgstudyworld.com" target="_blank" rel="noopener"><img src="assets/projects/dg-study-world.jpg" alt="DG Study World"><span class="proj-index">09</span><span class="proj-overlay">Visit Site <span>↗</span></span></a>
+        <div class="proj-info"><span class="tag">Education</span><h4>DG Study World</h4><p>Study-abroad consultancy helping students apply to universities across the UK, USA and beyond.</p></div>
+      </div>
+
+      <div class="card proj-card">
+        <a class="proj-thumb" href="https://cmsglobaluk.com" target="_blank" rel="noopener"><img src="assets/projects/cms-global.jpg" alt="CMS Global"><span class="proj-index">10</span><span class="proj-overlay">Visit Site <span>↗</span></span></a>
+        <div class="proj-info"><span class="tag">Legal Services</span><h4>CMS Global</h4><p>UK immigration and legal consultancy site guiding clients through every visa route.</p></div>
+      </div>
+
+      <div class="card proj-card">
+        <a class="proj-thumb" href="https://www.electricianabilene.com" target="_blank" rel="noopener"><img src="assets/projects/electrician-abilene.jpg" alt="Electrician Abilene"><span class="proj-index">11</span><span class="proj-overlay">Visit Site <span>↗</span></span></a>
+        <div class="proj-info"><span class="tag">Local Service</span><h4>Electrician Abilene</h4><p>Lead-generation site for a licensed electrical contractor in Abilene, Texas.</p></div>
+      </div>
+
+      <div class="card proj-card">
+        <a class="proj-thumb" href="https://arcapitaluk.com" target="_blank" rel="noopener"><img src="assets/projects/arc-capital.jpg" alt="ARC Capital"><span class="proj-index">12</span><span class="proj-overlay">Visit Site <span>↗</span></span></a>
+        <div class="proj-info"><span class="tag">Consultancy</span><h4>ARC Capital</h4><p>Capital management consultancy site showcasing global expertise across 12+ business areas.</p></div>
+      </div>
+
+      <div class="card proj-card">
+        <a class="proj-thumb" href="https://ahndakbedekking.nl" target="_blank" rel="noopener"><img src="assets/projects/ahn-dakbedekking.jpg" alt="AHN Dakbedekking"><span class="proj-index">13</span><span class="proj-overlay">Visit Site <span>↗</span></span></a>
+        <div class="proj-info"><span class="tag">Construction</span><h4>AHN Dakbedekking</h4><p>Dutch flat-roofing company site with project galleries and instant quote requests.</p></div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="glow glow-blue" style="width:420px;height:420px;top:-140px;left:-160px;"></div>
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow"><span class="bar"></span>Process</div>
+      <h2 class="sec-title">From Idea to a Website That Works.</h2>
+      <p class="sec-sub">A simple and transparent process focused on understanding the problem, building the right solution and delivering a website that works for your business.</p>
+    </div>
+    <div class="process-grid">
+      <div class="card proc-card"><div class="n">01</div><span class="stage">Discover</span><h4>Understand the Problem</h4><p>I learn about your business, audience, goals and the challenges your current website is facing.</p></div>
+      <div class="card proc-card"><div class="n">02</div><span class="stage">Design</span><h4>Plan the Experience</h4><p>I create a clean structure and visual direction focused on usability, clarity and conversion.</p></div>
+      <div class="card proc-card"><div class="n">03</div><span class="stage">Develop</span><h4>Build the Solution</h4><p>I turn the approved design into a responsive WordPress website using modern development practices.</p></div>
+      <div class="card proc-card"><div class="n">04</div><span class="stage">Deliver</span><h4>Launch &amp; Optimize</h4><p>I test, optimize and prepare your website for a smooth launch and better performance.</p></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="glow glow-cyan" style="width:400px;height:400px;top:-100px;right:-160px;"></div>
+  <div class="wrap">
+    <div class="sec-head center">
+      <div class="eyebrow" style="justify-content:center;"><span class="bar"></span>Testimonials</div>
+      <h2 class="sec-title">What My Clients Say</h2>
+      <p class="sec-sub">A few words from people I've worked with on WordPress websites, redesigns and development projects.</p>
+    </div>
+    <div class="testi-grid">
+      <div class="card testi-card">
+        <div class="quote-icon">&#8220;</div>
+        <div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+        <p>Musa delivered a clean and professional website with great attention to detail. The whole process was smooth and easy.</p>
+        <div class="testi-who"><div class="dot">WP</div><div><strong>WP Premium</strong></div></div>
+      </div>
+      <div class="card testi-card">
+        <div class="quote-icon">&#8220;</div>
+        <div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+        <p>Great communication and excellent WordPress skills. He understood what I needed and delivered it professionally.</p>
+        <div class="testi-who"><div class="dot">MA</div><div><strong>Mehraj Alam</strong></div></div>
+      </div>
+      <div class="card testi-card">
+        <div class="quote-icon">&#8220;</div>
+        <div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+        <p>Very happy with the final result. The website looks modern, works smoothly and feels much easier to use.</p>
+        <div class="testi-who"><div class="dot">SH</div><div><strong>Shohidul Hoque</strong></div></div>
+      </div>
+      <div class="card testi-card">
+        <div class="quote-icon">&#8220;</div>
+        <div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+        <p>Musa was responsive, detail-oriented and easy to work with. He did a great job turning the requirements into a polished website.</p>
+        <div class="testi-who"><div class="dot">KA</div><div><strong>Kamil Ahmod</strong></div></div>
+      </div>
+      <div class="card testi-card">
+        <div class="quote-icon">&#8220;</div>
+        <div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+        <p>Professional work from start to finish. The website performance and overall design were exactly what I was looking for.</p>
+        <div class="testi-who"><div class="dot">SR</div><div><strong>Saifur Rahman</strong></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="contact" style="border-bottom:none;">
+  <div class="glow glow-deep" style="width:520px;height:340px;bottom:-120px;left:50%;transform:translateX(-50%);"></div>
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow"><span class="bar"></span>Contact</div>
+      <h2 class="sec-title">Let's Build Something Amazing Together.</h2>
+      <p class="sec-sub">Have a new idea, an outdated website, or a business that needs a stronger online presence? Tell me what you're trying to achieve, and let's find the right solution.</p>
+    </div>
+    <div class="contact-grid">
+      <div class="card contact-info-card">
+        <h4>Get in Touch</h4>
+        <p>Usually replies within a day. WhatsApp is the fastest way to reach me.</p>
+        <div class="contact-line"><span>WhatsApp</span><a href="https://wa.me/8801819714004" target="_blank" rel="noopener">+880 1819 714004</a></div>
+        <div class="contact-line"><span>Email</span><a href="mailto:devmusabd0@gmail.com">devmusabd0@gmail.com</a></div>
+        <div class="contact-line"><span>Location</span><span style="color:var(--text-dim);">Sylhet, Bangladesh</span></div>
+      </div>
+      <form class="card form-card" onsubmit="return false;">
+        <div class="form-row">
+          <div class="field"><label>Full Name</label><input type="text" placeholder="Your name"></div>
+          <div class="field"><label>Email Address</label><input type="email" placeholder="you@company.com"></div>
+        </div>
+        <div class="form-row">
+          <div class="field"><label>Project Type</label>
+            <select>
+              <option>Select project type</option>
+              <option>New Website</option>
+              <option>Website Redesign</option>
+              <option>Figma to WordPress</option>
+              <option>WooCommerce</option>
+              <option>Landing Page Design</option>
+              <option>Speed Optimization</option>
+              <option>Maintenance</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div class="field"><label>Budget</label>
+            <select>
+              <option>Select budget</option>
+              <option>Under $200</option>
+              <option>$200 – $500</option>
+              <option>$500 – $1,000</option>
+              <option>$1,000+</option>
+            </select>
+          </div>
+        </div>
+        <div class="field"><label>Tell Me About Your Project</label><textarea rows="4" placeholder="Tell me about your project"></textarea></div>
+        <button class="btn btn-solid send-btn">Send Message ↗</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <a href="#home" class="logo"><span class="logo-ring footer-ring"><img src="assets/logo.png" alt="Syed Musa logo"></span>SYED MUSA</a>
+        <p>I build fast, modern and conversion-focused WordPress websites that help businesses grow online.</p>
+        <div class="footer-socials">
+          <a href="https://www.facebook.com/developermusa" target="_blank" rel="noopener">fb</a>
+          <a href="https://www.instagram.com/developermusa" target="_blank" rel="noopener">ig</a>
+          <a href="https://www.linkedin.com/in/developermusa" target="_blank" rel="noopener">in</a>
+          <a href="https://x.com/developermusa0" target="_blank" rel="noopener">x</a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h5>Quick Links</h5>
+        <a href="#home">Home</a>
+        <a href="#about">About</a>
+        <a href="#skills">Skills</a>
+        <a href="#services">Services</a>
+        <a href="#projects">Projects</a>
+        <a href="#contact">Contact</a>
+      </div>
+      <div class="footer-col">
+        <h5>Contact Information</h5>
+        <a href="mailto:devmusabd0@gmail.com">devmusabd0@gmail.com</a>
+        <a href="https://wa.me/8801819714004" target="_blank" rel="noopener">+880 1819 714004</a>
+        <span>Sylhet, Bangladesh</span>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Syed Musa. All Rights Reserved.</span>
+      <span>Built with WordPress, Elementor &amp; care.</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // header scroll-shrink + progress bar + top-bar collapse
+  const header = document.getElementById('siteHeader');
+  const topBar = document.getElementById('topBar');
+  const progress = document.getElementById('scrollProgress');
+  function onScroll() {
+    const y = window.scrollY;
+    header.classList.toggle('scrolled', y > 30);
+    topBar.classList.toggle('hide', y > 30);
+    const docH = document.documentElement.scrollHeight - window.innerHeight;
+    progress.style.width = (docH > 0 ? (y / docH) * 100 : 0) + '%';
+  }
+  window.addEventListener('scroll', onScroll, { passive:true });
+  onScroll();
+
+  // mobile menu toggle
+  const menuBtn = document.getElementById('menuBtn');
+  const mainNav = document.getElementById('mainNav');
+  menuBtn.addEventListener('click', () => {
+    const isOpen = mainNav.classList.toggle('open');
+    menuBtn.innerHTML = isOpen ? '&#10005;' : '&#9776;';
+  });
+  mainNav.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+    mainNav.classList.remove('open');
+    menuBtn.innerHTML = '&#9776;';
+  }));
+
+  // scroll-spy: highlight active nav link based on current section
+  const navLinks = Array.from(mainNav.querySelectorAll('a[href^="#"]'));
+  const sectionMap = navLinks.map(link => ({
+    link,
+    section: document.getElementById(link.getAttribute('href').slice(1))
+  })).filter(item => item.section);
+
+  const spyIO = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      const match = sectionMap.find(item => item.section === entry.target);
+      if (!match) return;
+      if (entry.isIntersecting) {
+        navLinks.forEach(l => l.classList.remove('active'));
+        match.link.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-45% 0px -45% 0px', threshold: 0 });
+  sectionMap.forEach(item => spyIO.observe(item.section));
+
+  // scroll reveal with stagger
+  const revealSelector = '.card, .sec-head, .stat-strip .stat, .mini-stat, .tool-pill';
+  const revealEls = Array.from(document.querySelectorAll(revealSelector));
+  const grouped = {};
+  revealEls.forEach(el => {
+    const parent = el.parentElement;
+    if (!grouped[parent]) grouped[parent] = [];
+    grouped[parent].push(el);
+  });
+  Object.values(grouped).forEach(group => {
+    group.forEach((el, i) => {
+      el.style.transitionDelay = ((i % 6) * 0.07) + 's';
+    });
+  });
+
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        io.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+  revealEls.forEach(el => io.observe(el));
+
+  // animated counters for stat numbers
+  function animateCounter(el) {
+    const raw = el.textContent.trim();
+    const match = raw.match(/^([\d.]+)(.*)$/);
+    if (!match) return;
+    const target = parseFloat(match[1]);
+    const suffix = match[2];
+    const decimals = (match[1].split('.')[1] || '').length;
+    const duration = 1100;
+    const start = performance.now();
+    function step(now) {
+      const p = Math.min((now - start) / duration, 1);
+      const eased = 1 - Math.pow(1 - p, 3);
+      el.textContent = (target * eased).toFixed(decimals) + suffix;
+      if (p < 1) requestAnimationFrame(step);
+      else el.textContent = target.toFixed(decimals) + suffix;
+    }
+    requestAnimationFrame(step);
+  }
+  const counterEls = document.querySelectorAll('.stat-strip .num, .mini-stat .n');
+  const counterIO = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        animateCounter(entry.target);
+        counterIO.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.5 });
+  counterEls.forEach(el => counterIO.observe(el));
+</script>
+</body>
+</html>
