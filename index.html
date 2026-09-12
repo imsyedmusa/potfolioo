@@ -292,6 +292,10 @@
   .field input::placeholder, .field textarea::placeholder{ color:var(--text-mute); }
   .field{ margin-bottom:14px; }
   .send-btn{ width:100%; padding:12px; justify-content:center; margin-top:4px; }
+  .send-btn:disabled{ opacity:0.6; cursor:not-allowed; }
+  .form-status{ margin-top:12px; font-size:13px; text-align:center; min-height:18px; }
+  .form-status.success{ color:#4ADE80; }
+  .form-status.error{ color:#F87171; }
 
   /* ---------- footer ---------- */
   footer{ padding:48px 0 26px; }
@@ -395,7 +399,7 @@
           <div class="stat"><div class="num">99.9%</div><div class="label">Client Focused</div></div>
         </div>
       </div>
-            <div class="hero-visual">
+      <div class="hero-visual">
         <div class="glow glow-blue" style="width:360px;height:360px;top:20%;left:10%;"></div>
         <div class="hero-photo-frame">
           <img src="assets/photo.jpg" alt="Syed Musa">
@@ -508,13 +512,13 @@
         <div class="tool-card"><div class="badge" style="background:#2F6FED;">W</div><div class="name">WoodMart</div></div>
         <div class="tool-card"><div class="badge" style="background:#FA6423;">RM</div><div class="name">Rank Math</div></div>
         <div class="tool-card"><div class="badge" style="background:#A61E69;"><img src="https://cdn.simpleicons.org/yoast/ffffff" alt="Yoast SEO" loading="lazy" onerror="this.replaceWith(document.createTextNode('Y'))"></div><div class="name">Yoast SEO</div></div>
-        <div class="tool-card"><div class="badge" style="background:#F6821F;"><img src="https://cdn.simpleicons.org/cloudflare/ffffff" alt="Cloudflare" loading="lazy" onerror="this.replaceWith(document.createTextNode('\u2601'))"></div><div class="name">Cloudflare</div></div>
+        <div class="tool-card"><div class="badge" style="background:#F6821F;"><img src="https://cdn.simpleicons.org/cloudflare/ffffff" alt="Cloudflare" loading="lazy" onerror="this.replaceWith(document.createTextNode('☁'))"></div><div class="name">Cloudflare</div></div>
         <div class="tool-card"><div class="badge" style="background:#F7DF1E;"><img src="https://cdn.simpleicons.org/javascript/000000" alt="JavaScript" loading="lazy" onerror="this.replaceWith(document.createTextNode('JS'))"></div><div class="name">JavaScript</div></div>
         <div class="tool-card"><div class="badge" style="background:#777BB4;"><img src="https://cdn.simpleicons.org/php/ffffff" alt="PHP" loading="lazy" onerror="this.replaceWith(document.createTextNode('php'))"></div><div class="name">PHP</div></div>
         <div class="tool-card"><div class="badge" style="background:#2F6FED;">W</div><div class="name">WoodMart</div></div>
         <div class="tool-card"><div class="badge" style="background:#FA6423;">RM</div><div class="name">Rank Math</div></div>
         <div class="tool-card"><div class="badge" style="background:#A61E69;"><img src="https://cdn.simpleicons.org/yoast/ffffff" alt="Yoast SEO" loading="lazy" onerror="this.replaceWith(document.createTextNode('Y'))"></div><div class="name">Yoast SEO</div></div>
-        <div class="tool-card"><div class="badge" style="background:#F6821F;"><img src="https://cdn.simpleicons.org/cloudflare/ffffff" alt="Cloudflare" loading="lazy" onerror="this.replaceWith(document.createTextNode('\u2601'))"></div><div class="name">Cloudflare</div></div>
+        <div class="tool-card"><div class="badge" style="background:#F6821F;"><img src="https://cdn.simpleicons.org/cloudflare/ffffff" alt="Cloudflare" loading="lazy" onerror="this.replaceWith(document.createTextNode('☁'))"></div><div class="name">Cloudflare</div></div>
       </div>
     </div>
   </div>
@@ -676,14 +680,17 @@
         <div class="contact-line"><span>Email</span><a href="mailto:devmusabd0@gmail.com">devmusabd0@gmail.com</a></div>
         <div class="contact-line"><span>Location</span><span style="color:var(--text-dim);">Sylhet, Bangladesh</span></div>
       </div>
-      <form class="card form-card" onsubmit="return false;">
+      <form class="card form-card" id="contactForm">
+        <input type="hidden" name="access_key" value="7df3b7ee-c9b7-4157-89eb-f8a9bb89aef1">
+        <input type="hidden" name="subject" value="New project inquiry from portfolio site">
+        <input type="hidden" name="from_name" value="Syed Musa Portfolio">
         <div class="form-row">
-          <div class="field"><label>Full Name</label><input type="text" placeholder="Your name"></div>
-          <div class="field"><label>Email Address</label><input type="email" placeholder="you@company.com"></div>
+          <div class="field"><label>Full Name</label><input type="text" name="name" placeholder="Your name" required></div>
+          <div class="field"><label>Email Address</label><input type="email" name="email" placeholder="you@company.com" required></div>
         </div>
         <div class="form-row">
           <div class="field"><label>Project Type</label>
-            <select>
+            <select name="project_type">
               <option>Select project type</option>
               <option>New Website</option>
               <option>Website Redesign</option>
@@ -696,7 +703,7 @@
             </select>
           </div>
           <div class="field"><label>Budget</label>
-            <select>
+            <select name="budget">
               <option>Select budget</option>
               <option>Under $200</option>
               <option>$200 – $500</option>
@@ -705,8 +712,9 @@
             </select>
           </div>
         </div>
-        <div class="field"><label>Tell Me About Your Project</label><textarea rows="4" placeholder="Tell me about your project"></textarea></div>
-        <button class="btn btn-solid send-btn">Send Message ↗</button>
+        <div class="field"><label>Tell Me About Your Project</label><textarea rows="4" name="message" placeholder="Tell me about your project" required></textarea></div>
+        <button class="btn btn-solid send-btn" type="submit">Send Message ↗</button>
+        <p id="formStatus" class="form-status"></p>
       </form>
     </div>
   </div>
@@ -848,6 +856,50 @@
     });
   }, { threshold: 0.5 });
   counterEls.forEach(el => counterIO.observe(el));
+
+  // contact form submission (Web3Forms, free, no backend needed)
+  const contactForm = document.getElementById('contactForm');
+  const formStatus = document.getElementById('formStatus');
+  contactForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const btn = contactForm.querySelector('.send-btn');
+    const originalText = btn.textContent;
+    const accessKey = contactForm.querySelector('input[name="access_key"]').value;
+
+    if (!accessKey || accessKey === 'YOUR_WEB3FORMS_ACCESS_KEY') {
+      formStatus.textContent = 'Form not connected yet, add your Web3Forms access key.';
+      formStatus.className = 'form-status error';
+      return;
+    }
+
+    btn.textContent = 'Sending...';
+    btn.disabled = true;
+    formStatus.textContent = '';
+    formStatus.className = 'form-status';
+
+    try {
+      const res = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        headers: { 'Accept': 'application/json' },
+        body: new FormData(contactForm)
+      });
+      const result = await res.json();
+      if (result.success) {
+        formStatus.textContent = "Message sent. I'll get back to you within a day.";
+        formStatus.className = 'form-status success';
+        contactForm.reset();
+      } else {
+        formStatus.textContent = 'Something went wrong. Please try again or email me directly.';
+        formStatus.className = 'form-status error';
+      }
+    } catch (err) {
+      formStatus.textContent = 'Network error. Please try again or email me directly.';
+      formStatus.className = 'form-status error';
+    }
+
+    btn.textContent = originalText;
+    btn.disabled = false;
+  });
 </script>
 </body>
 </html>
